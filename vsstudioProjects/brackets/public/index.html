@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+c<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bracket of Hope - Sports Bracket Signup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Removed custom font, using Arial -->
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-width: 100vw;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      text-shadow: none;
+      background: #10B3CD;
+    }
+    .header {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .logo {
+      font-size: 3.6rem;
+      font-weight: bold;
+      color: #FFF0F3;
+      letter-spacing: 2px;
+      text-shadow: none;
+      margin-bottom: 0.5rem;
+    }
+    .signup-container {
+      background: #FFF0F3;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .signup-container h2 {
+      color: #F571A4;
+      margin-bottom: 1.5rem;
+      font-size: 2.4rem;
+      font-weight: bold;
+      text-shadow: none;
+      text-align: center;
+    }
+    button {
+      background: #F573A6;
+      color: #FFF0F3;
+      border: none;
+      border-radius: 8px;
+      padding: 1.2rem 2.8rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      box-shadow: 0 2px 8px #d570a3, 0 2px 8px #1db3e9;
+      transition: background 0.2s, transform 0.2s;
+      font-family: Arial, sans-serif;
+    }
+    button:hover {
+      background: #d570a3;
+      transform: scale(1.04);
+    }
+    @media (max-width: 500px) {
+      .signup-container {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        margin-top: 80px;
+      }
+      .logo {
+        font-size: 4rem;
+      }
+    }
+  </style>
+  <div class="signup-container">
+    <div class="header">
+      <div class="logo">BRACKET OF HOPE</div>
+    </div>
+    <h2>Sign up for the Overwatch Community Bash!</h2>
+    <img src="logo.png" alt="Bracket of Hope Logo" class="main-logo" style="max-width: 320px; width: 100%; display: block; margin: 0 auto 2rem auto;" />
+    <form id="signup-form" style="width: 100%; max-width: 400px; margin: 0 auto;">
+      <div style="margin-bottom: 1.5rem; width: 100%;">
+  <label for="team-name" style="display:block; margin-bottom:0.5rem; font-size:1.2rem;">Team Name (has to be appropriate):</label>
+  <input id="team-name" type="text" name="name" required style="width:100%; font-size:1.3rem; padding:1.1rem;">
+      </div>
+      <div style="margin-bottom: 1.5rem; width: 100%;">
+  <label for="email" style="display:block; margin-bottom:0.5rem; font-size:1.2rem;">Email:</label>
+  <input id="email" type="email" name="email" required style="width:100%; font-size:1.3rem; padding:1.1rem;">
+      </div>
+      <div style="width: 100%; text-align: center;">
+        <button type="submit">Pay $15 & Sign Up</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        email: form.email.value
+      };
+
+      const res = await fetch('/create-checkout-session',  {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(data)
+    });
+
+      const dataresponse = await res.json();
+      window.location.href = dataresponse.url; // Redirect to Stripe Checkout
+    });
+  </script>
+</body>
+</html>
