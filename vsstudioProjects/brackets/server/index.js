@@ -15,22 +15,11 @@ const BASE_URL = process.env.BRACKETS_OF_HOPE_BASE_URL || 'http://localhost:3000
 
 
 // JSON file to store teams
-import fs from 'fs';
-import path from 'path';
-const TEAMS_FILE = path.resolve('./server/teams.json');
 
-function readTeams() {
-  try {
-    const data = fs.readFileSync(TEAMS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch (e) {
-    return [];
-  }
-}
-
-function writeTeams(teams) {
-  fs.writeFileSync(TEAMS_FILE, JSON.stringify(teams, null, 2));
-}
+import { createClient } from '@supabase/supabase-js';
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 app.use(cors());
 app.use(express.json());
@@ -71,7 +60,7 @@ app.post('/create-checkout-session', async (req, res) => {
       cancel_url: `${BASE_URL}/cancel.html`,
     });
 
-     console.log('Stripe session created with ID:', session.id);
+    
 
     res.json({ url: session.url });
   } catch (err) {
@@ -87,12 +76,13 @@ app.post('/api/add-team', async (req, res) => {
     const session = await stripe.checkout.sessions.retrieve(session_id);
     const name = session.metadata?.name;
     const email = session.customer_email;
-    
     if (name && email) {
-      let teams = readTeams();
-      if (!teams.some(t => t.name === name)) {
-        teams.push({ name, email });
-        writeTeams(teams);
+      // Insert into Supabase table OWCB_Teams
+      const { data, error } = await supabase
+        .from('OWCB_Teams')
+        .insert([{ team: name, email }]);
+      if (error) {
+        return res.status(500).json({ error: error.message });
       }
       return res.json({ success: true });
     } else {
@@ -114,7 +104,17 @@ app.post('/api/clear-teams', (req, res) => {
 
 // Endpoint to get all teams (bracket)
 app.get('/api/teams', (req, res) => {
-  res.json(readTeams());
+  // Fetch teams from Supabase
+  supabase
+    .from('OWCB_Teams')
+    .select('team, email')
+    .then(({ data, error }) => {
+      if (error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(data || []);
+      }
+    });
 });
 
 
