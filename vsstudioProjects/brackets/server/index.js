@@ -12,6 +12,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const baseUrl = process.env.BRACKETS_OF_HOPE_BASE_URL;
 
 console.log('Stripe Secret Key:', process.env.STRIPE_SECRET_KEY); // Debug log to ensure key is loaded
+console.log('baseUrl:', baseUrl); // Debug log to ensure baseUrl is loaded
 
 
 // JSON file to store teams
@@ -67,8 +68,8 @@ app.post('/create-checkout-session', async (req, res) => {
          name: name,
          email: email
       },
-      success_url: '{baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: '{baseUrl}/cancel.html',
+      success_url: 'http://localhost:3000/success.html?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: 'http://localhost:3000/cancel.html',
     });
 
      console.log('Stripe session created with ID:', session.id);
