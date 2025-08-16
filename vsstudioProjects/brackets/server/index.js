@@ -9,10 +9,9 @@ dotenv.config();
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const baseUrl = process.env.BRACKETS_OF_HOPE_BASE_URL;
+const BASE_URL = process.env.BRACKETS_OF_HOPE_BASE_URL || 'http://localhost:3000';
 
-console.log('Stripe Secret Key:', process.env.STRIPE_SECRET_KEY); // Debug log to ensure key is loaded
-console.log('baseUrl:', baseUrl); // Debug log to ensure baseUrl is loaded
+
 
 
 // JSON file to store teams
@@ -68,8 +67,8 @@ app.post('/create-checkout-session', async (req, res) => {
          name: name,
          email: email
       },
-      success_url: 'http://localhost:3000/success.html?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'http://localhost:3000/cancel.html',
+      success_url: `${BASE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${BASE_URL}/cancel.html`,
     });
 
      console.log('Stripe session created with ID:', session.id);
