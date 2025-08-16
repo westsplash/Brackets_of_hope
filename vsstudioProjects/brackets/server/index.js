@@ -10,6 +10,8 @@ dotenv.config();
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+console.log('Stripe Secret Key:', process.env.STRIPE_SECRET_KEY); // Debug log to ensure key is loaded
+
 
 // JSON file to store teams
 import fs from 'fs';
