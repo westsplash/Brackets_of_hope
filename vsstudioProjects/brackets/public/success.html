@@ -67,9 +67,9 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id })
+      }).then(() => {
+        loadBracket();
       });
-
-      loadBracket();
     }
     // Fetch and display bracket
     function loadBracket() {
@@ -83,7 +83,7 @@
           } else {
             teams.forEach((team, i) => {
               const li = document.createElement('li');
-              li.textContent = `${i + 1}. ${team.name}`;
+              li.textContent = `${i + 1}. ${team.team}`;
               ul.appendChild(li);
             });
           }
