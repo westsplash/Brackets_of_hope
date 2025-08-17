@@ -37,14 +37,14 @@ app.post('/create-checkout-session', async (req, res) => {
              name: 'Overwatch Community Bash Signup',
              description: 'Entry to the 2025 Championship Bracket',
           },
-          unit_amount: 1500, // $15.00 in cents
+          unit_amount: 100, // $15.00 in cents
         },
         quantity: 1,
       },
     ];
 
     // Debug log before sending to Stripe
-    console.log('Creating Stripe session with line items:', JSON.stringify(lineItems, null, 2));
+  
 
 
     const session = await stripe.checkout.sessions.create({
