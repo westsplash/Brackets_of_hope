@@ -44,7 +44,6 @@ app.post('/create-checkout-session', async (req, res) => {
     ];
 
     // Debug log before sending to Stripe
-  
 
 
     const session = await stripe.checkout.sessions.create({
@@ -77,10 +76,19 @@ app.post('/api/add-team', async (req, res) => {
     const name = session.metadata?.name;
     const email = session.customer_email;
     if (name && email) {
+      //check for duplicate session_id
+      const { data: existingTeams, error: fetchError } = await supabase
+        .from('OWCB_Teams')
+        .select('session_id')
+        .eq('session_id', session_id);
+        // If session_id already exists, return error
+      if (existingTeams && existingTeams.length > 0) {
+        return res.status(400).json({ error: 'Session ID already exists' });
+      }
       // Insert into Supabase table OWCB_Teams
       const { data, error } = await supabase
         .from('OWCB_Teams')
-        .insert([{ team: name, email }]);
+        .insert([{ team: name, email, session_id }]);
       if (error) {
         return res.status(500).json({ error: error.message });
       }
