@@ -1,0 +1,16 @@
+{
+  "name": "carbon-footprint-tracker",
+  "version": "1.0.0",
+  "description": "A simple app to log travel, shopping, and diet habits, estimate carbon footprint, offer eco-friendly tips, and track progress over 3 months.",
+  "main": "backend/index.js",
+  "scripts": {
+    "start": "node backend/index.js",
+    "frontend": "cd frontend && npm start"
+  },
+  "author": "westsplash",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}
