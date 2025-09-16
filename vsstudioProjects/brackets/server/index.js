@@ -1,3 +1,35 @@
+// Endpoint for independent donations
+app.post('/create-donation-session', async (req, res) => {
+  const { amount } = req.body;
+  try {
+    if (!amount || isNaN(amount) || amount < 1) {
+      return res.status(400).json({ error: 'Invalid donation amount' });
+    }
+    const lineItems = [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'Independent Donation',
+            description: 'Support Brackets of Hope!'
+          },
+          unit_amount: Math.round(amount * 100), // Convert dollars to cents
+        },
+        quantity: 1,
+      },
+    ];
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `${BASE_URL}/teams.html`,
+      cancel_url: `${BASE_URL}/cancel.html`,
+    });
+    res.json({ url: session.url });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 import express from 'express';

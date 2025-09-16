@@ -88,7 +88,7 @@ c<head>
     <img src="logo.png" alt="Bracket of Hope Logo" class="main-logo" style="max-width: 320px; width: 100%; display: block; margin: 0 auto 2rem auto;" />
     <form id="signup-form" style="width: 100%; max-width: 400px; margin: 0 auto;">
       <div style="margin-bottom: 1.5rem; width: 100%;">
-  <label for="team-name" style="display:block; margin-bottom:0.5rem; font-size:1.2rem;">Team Name (has to be appropriate and 3 member teams):</label>
+  <label for="team-name" style="display:block; margin-bottom:0.5rem; font-size:1.2rem;">Team Name (has to be appropriate and 3 members per team):</label>
   <input id="team-name" type="text" name="name" required style="width:100%; font-size:1.3rem; padding:1.1rem;">
       </div>
       <div style="margin-bottom: 1.5rem; width: 100%;">
@@ -99,6 +99,13 @@ c<head>
         <button type="submit">Pay $15 & Sign Up</button>
       </div>
     </form>
+    <div style="margin-top:2.5rem; width:100%; max-width:400px; text-align:center;">
+      <h3 style="color:#1db3e9; font-size:1.5rem; margin-bottom:1rem;">Donate Independently</h3>
+      <form id="donate-form" style="display:flex; flex-direction:column; align-items:center; gap:1rem;">
+        <input id="donation-amount" type="number" min="1" step="1" placeholder="Enter amount (USD)" required style="width:80%; font-size:1.2rem; padding:0.8rem; border-radius:8px; border:1px solid #d570a3;">
+        <button type="submit" style="background:#1db3e9; color:#fff; font-size:1.2rem; padding:1rem 2rem; border-radius:8px; border:none; font-weight:bold; cursor:pointer;">Donate</button>
+      </form>
+    </div>
   </div>
   <script>
     document.getElementById('signup-form').addEventListener('submit', async function(e) {
@@ -115,6 +122,22 @@ c<head>
          body: JSON.stringify(data)
     });
 
+      const dataresponse = await res.json();
+      window.location.href = dataresponse.url; // Redirect to Stripe Checkout
+    });
+    // Donate Independently handler
+    document.getElementById('donate-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const amount = document.getElementById('donation-amount').value;
+      if (!amount || isNaN(amount) || amount < 1) {
+        alert('Please enter a valid donation amount.');
+        return;
+      }
+      const res = await fetch('/create-donation-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Math.round(Number(amount)) })
+      });
       const dataresponse = await res.json();
       window.location.href = dataresponse.url; // Redirect to Stripe Checkout
     });
