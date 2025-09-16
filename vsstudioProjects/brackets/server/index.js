@@ -41,7 +41,7 @@ app.post('/create-donation-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${BASE_URL}/teams.html`,
+      success_url: `${BASE_URL}/donation-success.html`,
       cancel_url: `${BASE_URL}/cancel.html`,
     });
     res.json({ url: session.url });
