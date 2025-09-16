@@ -1,3 +1,22 @@
+
+import express from 'express';
+import cors from 'cors';
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+dotenv.config();
+
+const app = express();
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const BASE_URL = process.env.BRACKETS_OF_HOPE_BASE_URL || 'http://localhost:3000';
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
+
 // Endpoint for independent donations
 app.post('/create-donation-session', async (req, res) => {
   const { amount } = req.body;
@@ -30,32 +49,6 @@ app.post('/create-donation-session', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-
-import express from 'express';
-import cors from 'cors';
-import Stripe from 'stripe';
-import dotenv from 'dotenv';
-dotenv.config();
-
-
-const app = express();
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const BASE_URL = process.env.BRACKETS_OF_HOPE_BASE_URL || 'http://localhost:3000';
-
-
-
-
-// JSON file to store teams
-
-import { createClient } from '@supabase/supabase-js';
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-app.use(cors());
-app.use(express.json());
-app.use(express.static('public'));
 
 
 app.post('/create-checkout-session', async (req, res) => {
